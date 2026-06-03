@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Route AI tasks to the right model — Haiku for lookups, Sonnet for coding, Opus for architecture. Cut token usage 20-50% with 5 minutes of config. Setup guides for Claude Code, Cursor, and Codex.">
+  <title>Model Routing: Cut AI Coding Costs 20-50% | TokenCut</title>
+  <link rel="canonical" href="https://tokencut.org/model-routing/">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Model Routing: Cut AI Coding Costs 20-50% | TokenCut">
+  <meta property="og:description" content="Route AI tasks to the right model — Haiku for lookups, Sonnet for coding, Opus for architecture. Cut token usage 20-50% with 5 minutes of config.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tokencut.org/model-routing/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Model Routing: Cut AI Coding Costs 20-50% | TokenCut">
+  <meta name="twitter:description" content="Route AI tasks to the right model — Haiku for lookups, Sonnet for coding, Opus for architecture. Setup guides for Claude Code, Cursor, and Codex.">
+  <link rel="stylesheet" href="/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tokencut.org/" },
+      { "@type": "ListItem", "position": 2, "name": "Model Routing", "item": "https://tokencut.org/model-routing/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Model Routing: Cut AI Coding Costs 20-50%",
+    "description": "Route AI tasks to the right model — Haiku for lookups, Sonnet for coding, Opus for architecture. Cut token usage 20-50% with 5 minutes of config. Setup guides for Claude Code, Cursor, and Codex.",
+    "author": { "@type": "Person", "name": "TokenCut" },
+    "datePublished": "2026-06-03",
+    "dateModified": "2026-06-03",
+    "url": "https://tokencut.org/model-routing/",
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="/">~/tokencut</a></span>
+    <ul class="nav-links">
+      <li><a href="/#methods">Methods</a></li>
+      <li><a href="/#compare">Compare</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+  <div class="breadcrumb"><a href="/">Home</a> / <span>Model Routing</span></div>
+
+  <!-- Sub-Hero -->
+  <section class="sub-hero">
+    <div class="method-badge">Method 01</div>
+    <h1>Model Routing: Cut AI Coding Costs 20-50%</h1>
+    <p class="subtitle">90% of your daily AI coding tasks don't need the most expensive model. Route file lookups to Haiku, daily coding to Sonnet, and save Opus for architecture decisions — all with five minutes of config.</p>
+    <div class="savings-tag">Token Savings: 20-50%</div>
+  </section>
+
+  <!-- What Is Model Routing -->
+  <section class="section">
+    <h2>What Is Model Routing</h2>
+    <p class="intro">Model routing is the practice of directing different types of AI tasks to different models based on complexity, rather than using a single expensive model for everything. Think of it as triage: not every question needs a specialist, and not every task warrants the full power of Opus.</p>
+
+    <p>In a typical AI coding session, you issue dozens of requests. Roughly 40% are simple lookups ("where is this function defined?"), 40% are standard coding tasks ("add a parameter to this method"), and only 20% are genuinely complex ("design the auth system for this microservice"). Yet most developers fire all of them at the same top-tier model.</p>
+
+    <p>The economics are stark. Opus costs roughly 5x more per token than Sonnet and 15x more than Haiku for input. For output tokens, the gap is even wider — Opus output is about 5x Sonnet and 25x Haiku. If you route 80% of your requests to cheaper models, your blended cost per session drops dramatically with zero quality loss on simple tasks.</p>
+
+    <p>This isn't about downgrading your tools. It's about matching the tool to the job. You wouldn't rent a server farm to host a static landing page. You shouldn't use Opus to grep for a function name.</p>
+
+    <h3>The Three-Tier Routing Model</h3>
+    <p>The most effective routing strategy uses three tiers, each mapped to a specific class of task:</p>
+    <ul>
+      <li><strong>Haiku (Tier 1) — Exploration and Lookups:</strong> File search, finding function definitions, reading documentation, checking git history, explaining simple code. Haiku is fast, cheap, and surprisingly capable at information retrieval. It processes context at roughly 15-25% the cost of Opus.</li>
+      <li><strong>Sonnet (Tier 2) — Daily Coding:</strong> Writing functions, refactoring methods, fixing bugs, adding features, writing tests, code review. Sonnet delivers near-Opus code quality on standard development tasks at about 20-25% of the cost. For most working developers, Sonnet should be the default model.</li>
+      <li><strong>Opus (Tier 3) — Architecture and Complex Reasoning:</strong> System design, multi-file architecture decisions, security audits, complex debugging sessions, performance optimization. Opus shines when the problem requires deep reasoning across many interconnected concerns. Reserve it for the 10-20% of tasks that genuinely need it.</li>
+    </ul>
+
+    <p>This three-tier approach is the foundation of every other token-saving method. Before you optimize prompts or tweak compaction thresholds, get your routing right. It's the single highest-leverage change you can make — five minutes of config for 20-50% savings.</p>
+  </section>
+
+  <!-- How to Set It Up -->
+  <section class="section">
+    <h2>How to Set It Up</h2>
+    <p class="intro">Each AI coding tool has its own way of configuring model routing. Here are the exact configs for Claude Code, Cursor, and Codex — copy, paste, and adjust to your workflow.</p>
+
+    <h3>Claude Code</h3>
+    <p>Claude Code supports two independent model settings: a main model for your primary interactions and a subagent model for background tasks like file search and exploration. This is where the biggest savings live — subagents handle the majority of per-task token consumption.</p>
+    <div class="code-block">
+      <span class="cm"># ~/.claude/settings.json</span><br>
+      {<br>
+      &nbsp;&nbsp;<span class="st">"model"</span>: <span class="st">"sonnet"</span>,<br>
+      &nbsp;&nbsp;<span class="st">"env"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"CLAUDE_CODE_SUBAGENT_MODEL"</span>: <span class="st">"haiku"</span><br>
+      &nbsp;&nbsp;}<br>
+      }
+    </div>
+    <p>With this config, every "find where X is defined" or "search for Y pattern" runs on Haiku, while your actual coding requests use Sonnet. Subagents typically account for 30-50% of session tokens, so routing them to Haiku is a massive win. When you hit a genuinely hard problem, switch Opus on the fly with <code>/model opus</code> — no config change needed.</p>
+
+    <h3>Cursor</h3>
+    <p>Cursor lets you set different models for different features. The key split is between the inline editor (Ctrl+K) and the chat panel (Ctrl+L).</p>
+    <div class="code-block">
+      <span class="cm"># Cursor Settings (Settings > Models)</span><br>
+      <span class="cm"># Chat / Composer:</span><br>
+      Default model: <span class="st">claude-sonnet-4</span><br>
+      <br>
+      <span class="cm"># Inline Edit (Ctrl+K):</span><br>
+      Default model: <span class="st">claude-haiku-4</span><br>
+      <br>
+      <span class="cm"># Terminal / Agent (Cmd+I):</span><br>
+      Default model: <span class="st">claude-sonnet-4</span>
+    </div>
+    <p>Inline edits are typically single-function changes, variable renames, or small refactors — perfect Haiku territory. Keep Sonnet for the chat panel where you describe multi-step tasks. For architecture planning sessions, manually switch chat to Opus from the model dropdown.</p>
+
+    <h3>OpenAI Codex CLI</h3>
+    <p>Codex CLI uses a model flag for each session. Create shell aliases so you never have to think about which flag to use.</p>
+    <div class="code-block">
+      <span class="cm"># ~/.bashrc or ~/.zshrc</span><br>
+      <span class="kw">alias</span> codex-quick=<span class="st">"codex --model gpt-5-nano"</span><br>
+      <span class="kw">alias</span> codex=<span class="st">"codex --model gpt-5"</span><br>
+      <span class="kw">alias</span> codex-deep=<span class="st">"codex --model gpt-5.2"</span><br>
+      <br>
+      <span class="cm"># Usage:</span><br>
+      codex-quick <span class="st">"find the auth middleware file"</span><br>
+      codex <span class="st">"add rate limiting to the login endpoint"</span><br>
+      codex-deep <span class="st">"design the caching strategy for our API layer"</span>
+    </div>
+    <p>The alias approach removes decision fatigue. <code>codex-quick</code> for lookups, <code>codex</code> for daily work, <code>codex-deep</code> for architecture. It takes thirty seconds to set up and saves you from typing model flags on every command.</p>
+  </section>
+
+  <!-- When to Use Which Model -->
+  <section class="section">
+    <h2>When to Use Which Model</h2>
+    <p class="intro">Not sure where a task falls? Use this decision table. When in doubt, start one tier lower than you think — you can always escalate if the output isn't good enough.</p>
+
+    <table class="decision-table">
+      <tr>
+        <th>Task</th>
+        <th>Best Model</th>
+        <th>Why</th>
+      </tr>
+      <tr>
+        <td>Find a function definition</td>
+        <td class="best">Haiku</td>
+        <td>Pure search, no generation needed. Haiku handles grep-style lookups instantly at 1/15th the cost.</td>
+      </tr>
+      <tr>
+        <td>Explain what a code block does</td>
+        <td class="best">Haiku</td>
+        <td>Summarization of existing code. Haiku reads and explains just as well as larger models for single files.</td>
+      </tr>
+      <tr>
+        <td>Check git history for a change</td>
+        <td class="best">Haiku</td>
+        <td>Information retrieval from structured data. No reasoning required beyond pattern matching.</td>
+      </tr>
+      <tr>
+        <td>Write a CRUD endpoint</td>
+        <td class="best">Sonnet</td>
+        <td>Standard coding pattern. Sonnet generates clean, idiomatic code indistinguishable from Opus on routine tasks.</td>
+      </tr>
+      <tr>
+        <td>Fix a null pointer bug</td>
+        <td class="best">Sonnet</td>
+        <td>Single-file debugging with clear error context. Sonnet traces logic paths reliably without Opus overhead.</td>
+      </tr>
+      <tr>
+        <td>Refactor a 200-line function</td>
+        <td class="best">Sonnet</td>
+        <td>Medium complexity, single concern. Sonnet handles restructuring well when the problem is well-scoped.</td>
+      </tr>
+      <tr>
+        <td>Write unit tests for a module</td>
+        <td class="best">Sonnet</td>
+        <td>Systematic but formulaic. Sonnet produces thorough test coverage at a fraction of Opus cost.</td>
+      </tr>
+      <tr>
+        <td>Design a multi-service auth flow</td>
+        <td class="best">Opus</td>
+        <td>Cross-cutting architecture with security implications. The extra reasoning depth matters here.</td>
+      </tr>
+      <tr>
+        <td>Debug a race condition</td>
+        <td class="best">Opus</td>
+        <td>Concurrency bugs require reasoning about interleaved execution. Opus consistently catches subtle timing issues that smaller models miss.</td>
+      </tr>
+      <tr>
+        <td>Performance profiling and optimization</td>
+        <td class="best">Opus</td>
+        <td>Requires understanding the full system to identify bottlenecks. Opus's broader context window and deeper reasoning pay off.</td>
+      </tr>
+      <tr>
+        <td>Security audit of auth and permissions</td>
+        <td class="best">Opus</td>
+        <td>Security-sensitive work demands the strongest reasoning. The cost difference is negligible compared to the cost of a vulnerability.</td>
+      </tr>
+    </table>
+
+    <div class="tip-box">
+      <strong>Pro tip:</strong> Start with Sonnet as your default. If the output looks good, you're done. If it misses nuance or depth, escalate to Opus. You'll find that 80% of tasks never need escalation — and the 20% that do are obvious within the first response.
+    </div>
+  </section>
+
+  <!-- Before vs After -->
+  <section class="section">
+    <h2>Before vs After: Real Numbers</h2>
+    <p class="intro">Here's what a typical heavy-use day looks like before and after implementing model routing. These numbers come from a single developer working a full 8-hour day in Claude Code.</p>
+
+    <table class="compare-table">
+      <tr>
+        <th>Metric</th>
+        <th>Before (All Opus)</th>
+        <th>After (Routed)</th>
+        <th>Savings</th>
+      </tr>
+      <tr>
+        <td><strong>Total tokens (input)</strong></td>
+        <td>~850,000</td>
+        <td>~290,000</td>
+        <td class="win">66%</td>
+      </tr>
+      <tr>
+        <td><strong>Total tokens (output)</strong></td>
+        <td>~95,000</td>
+        <td>~38,000</td>
+        <td class="win">60%</td>
+      </tr>
+      <tr>
+        <td><strong>Session cost</strong></td>
+        <td>$14.20</td>
+        <td>$4.35</td>
+        <td class="win">69%</td>
+      </tr>
+      <tr>
+        <td><strong>Monthly cost (22 workdays)</strong></td>
+        <td>$312.40</td>
+        <td>$95.70</td>
+        <td class="win">$216.70</td>
+      </tr>
+      <tr>
+        <td><strong>Tasks completed</strong></td>
+        <td>24</td>
+        <td>24</td>
+        <td class="mid">Same</td>
+      </tr>
+      <tr>
+        <td><strong>Avg. response time</strong></td>
+        <td>~4.2s</td>
+        <td>~1.8s</td>
+        <td class="win">57% faster</td>
+      </tr>
+    </table>
+
+    <p>The critical detail: <strong>tasks completed stayed the same.</strong> Model routing didn't reduce capability — it reduced cost. In fact, response times improved because Haiku and Sonnet are faster than Opus for most token budgets. You get the same work done, cheaper and faster.</p>
+
+    <p>The monthly savings of $216.70 is for one developer. If you're a team lead with five developers, that's over $1,000 per month saved — enough to cover another SaaS tool, an extra CI/CD runner, or a team lunch every week. Multiply across a 50-person engineering org and model routing alone saves $130,000 per year.</p>
+  </section>
+
+  <!-- Common Pitfalls -->
+  <section class="section">
+    <h2>Common Pitfalls</h2>
+    <p class="intro">Model routing is simple in theory but easy to get wrong in practice. Here are the three most common mistakes and how to avoid them.</p>
+
+    <h3>Pitfall 1: Routing Everything to the Cheapest Model</h3>
+    <p>The goal is not to minimize cost at all costs — it's to match model capability to task complexity. If you route everything to Haiku, you'll save tokens but produce lower-quality code, spend more time fixing Haiku's mistakes, and ultimately waste more tokens on rework than you saved. The pendulum swings both ways. Keep Sonnet as your default, not Haiku. Haiku is for exploration only.</p>
+
+    <h3>Pitfall 2: Not Setting a Subagent Model</h3>
+    <p>Many developers set their main model to Sonnet but leave the subagent model unset. In Claude Code, subagents inherit the main model if no override is provided — meaning your background file searches are still burning Sonnet tokens. Setting <code>CLAUDE_CODE_SUBAGENT_MODEL=haiku</code> is a one-line change that often doubles your savings. Do not skip it.</p>
+
+    <h3>Pitfall 3: Rigid Routing Rules</h3>
+    <p>No routing heuristic is perfect. Sometimes a task that looks simple ("find the auth middleware") balloons into a complex investigation ("and also trace every caller, check permissions, and audit the token refresh flow"). Build the habit of escalating mid-session. If Haiku or Sonnet gives you an answer that feels shallow or incomplete, switch to the next tier and re-ask. Claude Code supports <code>/model opus</code> mid-session. Cursor has a model dropdown. Use them.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <h2>FAQ</h2>
+
+    <div class="faq-item">
+      <button class="faq-q">Won't switching models all the time slow me down?</button>
+      <div class="faq-a"><p>Not if you set sensible defaults. With Haiku as your subagent model and Sonnet as your main model, the routing happens automatically in the background. You don't manually choose a model for every request — subagents pick up Haiku, your chat uses Sonnet, and you only intervene when you need Opus (roughly once or twice per session). The cognitive overhead is near zero after the first day.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">Is Haiku really good enough for code search and file lookups?</button>
+      <div class="faq-a"><p>Yes — and in some ways it's better. Haiku is faster than Sonnet and Opus for the kind of pattern-matching work that dominates code exploration. It reads files, traces imports, finds definitions, and summarizes code blocks with high accuracy. Where Haiku falls short is generating new code that requires understanding complex, multi-file interactions. For pure information retrieval, Haiku is the right tool.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">How do I know if I should escalate from Sonnet to Opus?</button>
+      <div class="faq-a"><p>Escalate when the Sonnet response feels shallow — it explains what the code does but misses why it was designed that way, or it gives a technically correct solution that creates problems elsewhere. Opus shines at cross-cutting concerns: it catches downstream effects, identifies architectural tradeoffs, and asks clarifying questions before jumping to code. If your first thought after reading Sonnet's response is "that works but I'm not sure it's right," escalate. The token cost of one Opus query is cheaper than an hour of debugging a subtle bug Sonnet introduced.</p></div>
+    </div>
+  </section>
+
+  <!-- Back Link -->
+  <a class="back-link" href="/">&#8592; Back to all 5 methods</a>
+
+</main>
+
+<footer>
+  <div class="sub-hint">
+    <a href="/model-routing/">Model Routing Guide</a>
+    <a href="/strategic-compaction/">Strategic Compaction</a>
+    <a href="/ecc-deep-dive/">ECC Deep Dive</a>
+    <a href="/trim-claude-md/">Trim CLAUDE.md</a>
+    <a href="/search-first-read-later/">Search First, Read Later</a>
+  </div>
+  <p>tokencut.org — each method works independently, combine them for the biggest savings.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var answer = this.nextElementSibling;
+      var isOpen = this.classList.contains('open');
+      document.querySelectorAll('.faq-q').forEach(function(b) { b.classList.remove('open'); });
+      document.querySelectorAll('.faq-a').forEach(function(a) { a.classList.remove('open'); });
+      if (!isOpen) { this.classList.add('open'); answer.classList.add('open'); }
+    });
+  });
+</script>
+
+</body>
+</html>

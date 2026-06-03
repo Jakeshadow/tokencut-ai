@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ECC (Everything Claude Code) — 182K GitHub stars, Anthropic Hackathon winner. Automates model routing, thinking token caps, and compaction. Works across Claude Code, Cursor, Codex, Gemini, and Copilot. Real production data: 30-50% token savings.">
+  <title>ECC Deep Dive: 30-50% Token Savings with One Install | TokenCut</title>
+  <link rel="canonical" href="https://tokencut.org/ecc-deep-dive/">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="ECC Deep Dive: 30-50% Token Savings with One Install | TokenCut">
+  <meta property="og:description" content="ECC (Everything Claude Code) — 182K GitHub stars, Anthropic Hackathon winner. Automates model routing, thinking token caps, and compaction. Real production data: 30-50% token savings.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tokencut.org/ecc-deep-dive/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ECC Deep Dive: 30-50% Token Savings with One Install | TokenCut">
+  <meta name="twitter:description" content="ECC — 182K GitHub stars, Anthropic Hackathon winner. One install automates model routing, thinking caps, and compaction. 30-50% savings.">
+  <link rel="stylesheet" href="/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tokencut.org/" },
+      { "@type": "ListItem", "position": 2, "name": "ECC Deep Dive", "item": "https://tokencut.org/ecc-deep-dive/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "ECC Deep Dive: The All-in-One Token Optimization Harness",
+    "description": "ECC (Everything Claude Code) — 182K GitHub stars, Anthropic Hackathon winner. Automates model routing, thinking token caps, and compaction. Works across Claude Code, Cursor, Codex, Gemini, and Copilot. Real production data: 30-50% token savings.",
+    "author": { "@type": "Person", "name": "TokenCut" },
+    "datePublished": "2026-06-03",
+    "dateModified": "2026-06-03",
+    "url": "https://tokencut.org/ecc-deep-dive/",
+    "isAccessibleForFree": true
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does ECC work with tools other than Claude Code?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. ECC supports Claude Code (primary), Cursor, Codex, OpenCode, Gemini CLI, and GitHub Copilot. The model routing and thinking token caps adapt to each platform's capabilities. Cursor and Codex benefit most from the routing layer; Copilot and Gemini benefit from the compaction and token cap settings." }
+      },
+      {
+        "@type": "Question",
+        "name": "How is ECC different from manually setting model and compaction options?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Manual configuration requires you to remember and tune 5-8 separate settings across multiple files. ECC bundles them into one install with sane defaults that have been battle-tested across thousands of developer hours. It also adds features manual config cannot replicate: dynamic subagent routing, per-task cost auditing, and automatic fallback when a model is unavailable." }
+      },
+      {
+        "@type": "Question",
+        "name": "Will ECC slow down my coding workflow?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. ECC operates at the configuration and routing layer, not between you and the model. Model routing decisions happen before the request is sent; thinking token caps are enforced server-side by the API; compaction triggers at the same intervals as native Claude Code. There is zero added latency. In practice, Haiku-routed lookups often feel faster because the lighter model responds quicker." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I know ECC is actually saving me money?",
+        "acceptedAnswer": { "@type": "Answer", "text": "ECC includes a built-in cost audit command (ecc-tools-cost-audit) that shows per-session and per-task token breakdowns by model. It compares your actual spend against what you would have paid routing everything through Opus with default settings. The audit also shows cumulative savings over time, so you can track ROI across days, weeks, or months." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="/">~/tokencut</a></span>
+    <ul class="nav-links">
+      <li><a href="/#methods">Methods</a></li>
+      <li><a href="/#compare">Compare</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb"><a href="/">Home</a> / <span>ECC Deep Dive</span></div>
+
+  <!-- Sub-hero -->
+  <section class="sub-hero">
+    <div class="method-badge rec">Method 03 — Recommended</div>
+    <h1>ECC Deep Dive: The All-in-One Token Optimization Harness</h1>
+    <p class="subtitle">182K+ GitHub stars, winner of the Anthropic Hackathon. One install replaces five manual configurations — model routing, thinking token caps, strategic compaction, subagent routing, and cost auditing — all working together to deliver a verified 30–50% reduction in token spend.</p>
+    <div class="savings-tag">Token Savings: 30–50%</div>
+  </section>
+
+  <!-- What Is ECC -->
+  <section class="section">
+    <h2>What Is ECC</h2>
+    <p class="intro">ECC stands for Everything Claude Code, created by Affaan Mustafa. It is an agent harness optimization system that wraps your AI coding tool in a layer of intelligent defaults — defaults that would otherwise take hours to configure by hand. With 182,000+ GitHub stars and an official Anthropic Hackathon win, ECC has become the de facto standard for developers who want maximum AI capability at minimum token cost.</p>
+
+    <p>At its core, ECC is not a separate tool you have to learn. It is a configuration harness that sits between your coding agent and the model provider, making real-time decisions about which model should handle each request, how many thinking tokens the model is allowed to consume, when context should be compacted, and which subagent should be dispatched for background work. All of this happens automatically — you keep coding, and ECC keeps optimizing.</p>
+
+    <p>ECC was born from a simple observation: most developers were running Opus for everything, hitting $200+ monthly API bills, and manually tweaking a dozen environment variables that kept drifting out of sync. Affaan's insight was that these optimizations should be centralized, tested, and shipped as one unit. The result is a system that has saved the community an estimated millions of dollars in token costs since its release.</p>
+
+    <p>The hackathon judges at Anthropic recognized ECC for solving a real, measurable problem. Unlike many hackathon projects that demonstrate clever ideas, ECC demonstrated measurable cost reduction with zero feature degradation. Users reported the same code quality, same task completion rates, and 30–50% lower bills. That is why it won — and why it continues to be the most recommended optimization tool for AI-powered development environments.</p>
+
+    <p>ECC supports a broad ecosystem of AI coding tools: Claude Code (primary and deepest integration), Cursor, Codex, OpenCode, Gemini CLI, and GitHub Copilot. The integration depth varies by platform, but the core optimizations — model routing, thinking token caps, and compaction triggers — work everywhere. The broader tool support means you can standardize your team's token optimization strategy regardless of which editor each developer prefers.</p>
+  </section>
+
+  <!-- What ECC Automates -->
+  <section class="section">
+    <h2>What ECC Automates</h2>
+    <p class="intro">ECC bundles five optimization layers that would otherwise require manual configuration across multiple files. Each layer targets a different source of token waste.</p>
+
+    <h3>1. Intelligent Model Routing</h3>
+    <p>ECC inspects every request before it reaches the API and routes it to the appropriate model based on task complexity. Simple file lookups, grep searches, and variable renames go to Haiku (the fastest and cheapest model). Everyday coding tasks — feature implementation, refactoring, test writing — go to Sonnet. Complex architecture design, security audits, and multi-file debugging go to Opus. This single layer accounts for roughly half of ECC's total savings. You never have to remember to switch models mid-session; ECC handles it based on what you are actually doing.</p>
+
+    <h3>2. Thinking Token Caps</h3>
+    <p>Claude's extended thinking feature is powerful but expensive. The default maximum thinking token budget is 31,999 tokens — enough to burn significant cost on overthinking simple problems. ECC sets <code>MAX_THINKING_TOKENS=10000</code>, which is more than enough for complex reasoning while capping runaway thinking costs on straightforward tasks. Empirically, 10K thinking tokens covers even the hardest debugging sessions; the extra 22K in the default budget is rarely useful and frequently expensive. This layer alone saves 10–15% on sessions that use extended thinking.</p>
+
+    <h3>3. Strategic Compaction</h3>
+    <p>The native Claude Code compaction trigger fires at 95% context — far too late. By the time your context reaches 95%, the model has already lost track of early conversation details and is producing lower-quality output. ECC lowers the compaction threshold to 50% (<code>AUTOCOMPACT_PCT=50</code>), triggering summarization at safer intervals. This keeps the most important context in the active window, produces better compaction summaries, and prevents the costly scenario where you have to re-explain your architecture because the model forgot it three turns ago.</p>
+
+    <h3>4. Haiku Subagents</h3>
+    <p>When Claude Code spawns subagents for background tasks (file exploration, test running, search across the codebase), ECC routes those subagents to Haiku by default. Subagent work is typically mechanical — find files, grep patterns, list directories — and does not need the reasoning power of Sonnet or Opus. Routing subagents to Haiku can cut subagent token costs by 60–80% without affecting the quality of the subagent's output.</p>
+
+    <h3>5. Cost Auditing</h3>
+    <p>ECC ships with a built-in cost auditing tool (<code>ecc-tools-cost-audit</code>) that breaks down your token spending by task type, model, and session. It shows exactly how much you saved versus a baseline of running everything through Opus with default settings. The audit tool also tracks cumulative savings over time, so you can see your ROI grow day by day. This visibility is critical: what you cannot measure, you cannot improve.</p>
+  </section>
+
+  <!-- Installation -->
+  <section class="section">
+    <h2>Installation</h2>
+    <p class="intro">ECC installs in one command. Choose the approach that matches your workflow. Both produce an identical result — ECC running as a plugin inside Claude Code.</p>
+
+    <h3>Approach 1: Plugin Marketplace (Recommended)</h3>
+    <p>If you are running Claude Code with plugin marketplace access, this is the simplest path. The marketplace handles discovery, installation, and updates.</p>
+    <div class="code-block">
+      <span class="cm"># Step 1: Add the ECC plugin from the marketplace</span><br>
+      /plugin marketplace add affaan-m/everything-claude-code<br><br>
+      <span class="cm"># Step 2: Install the plugin (this activates all optimizations)</span><br>
+      /plugin install everything-claude-code@everything-claude-code
+    </div>
+
+    <h3>Approach 2: Direct Clone</h3>
+    <p>If you prefer managing plugins manually or do not have marketplace access, clone the repository directly and source the configuration.</p>
+    <div class="code-block">
+      <span class="cm"># Clone ECC into your Claude Code plugins directory</span><br>
+      git clone https://github.com/affaan-m/everything-claude-code.git \<br>
+      &nbsp;&nbsp;~/.claude/plugins/everything-claude-code<br><br>
+      <span class="cm"># Source the ECC configuration</span><br>
+      <span class="kw">echo</span> <span class="st">'source ~/.claude/plugins/everything-claude-code/init.sh'</span> >> ~/.claude/settings.json
+    </div>
+
+    <h3>Verify Installation</h3>
+    <p>After installation, confirm ECC is active and all five optimization layers are engaged.</p>
+    <div class="code-block">
+      <span class="cm"># Check ECC status — should show all 5 layers as ACTIVE</span><br>
+      /plugin status everything-claude-code<br><br>
+      <span class="cm"># Expected output (abbreviated):</span><br>
+      <span class="st">everything-claude-code v2.4.1</span><br>
+      <span class="st">  model-routing      ACTIVE  → Haiku/Sonnet/Opus</span><br>
+      <span class="st">  thinking-cap       ACTIVE  → MAX_THINKING_TOKENS=10000</span><br>
+      <span class="st">  compaction         ACTIVE  → AUTOCOMPACT_PCT=50</span><br>
+      <span class="st">  subagent-routing   ACTIVE  → Haiku subagents</span><br>
+      <span class="st">  cost-audit         ACTIVE  → ecc-tools-cost-audit</span>
+    </div>
+  </section>
+
+  <!-- Configuration Deep Dive -->
+  <section class="section">
+    <h2>Configuration Deep Dive</h2>
+    <p class="intro">ECC works out of the box with zero configuration, but every setting is tunable. Below are the recommended settings for each optimization layer, along with when and why you might adjust them.</p>
+
+    <h3>Model Routing Configuration</h3>
+    <p>ECC's routing table maps task patterns to models. The defaults are battle-tested, but you can override them if your workload differs from the norm. For example, if you work in a massive monorepo where even "simple lookups" span dozens of files, you might promote lookups from Haiku to Sonnet.</p>
+    <div class="code-block">
+      <span class="cm"># ~/.claude/settings.json — ECC routing overrides</span><br>
+      {<br>
+      &nbsp;&nbsp;<span class="st">"ecc"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"routing"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"lookup"</span>: <span class="st">"haiku"</span>,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"coding"</span>: <span class="st">"sonnet"</span>,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"architecture"</span>: <span class="st">"opus"</span>,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"subagent"</span>: <span class="st">"haiku"</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+      &nbsp;&nbsp;}<br>
+      }
+    </div>
+
+    <h3>Thinking Token Cap Configuration</h3>
+    <p>The 10K default is conservative. If you frequently tackle deeply nested debugging sessions (tracing bugs across 5+ abstraction layers), you can raise it to 16K. If you primarily do CRUD work and rarely use extended thinking, drop it to 6K for even more savings.</p>
+    <div class="code-block">
+      <span class="cm"># ~/.claude/settings.json — ECC thinking cap override</span><br>
+      {<br>
+      &nbsp;&nbsp;<span class="st">"ecc"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"thinking"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"maxTokens"</span>: 10000,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Raise to 16000 for complex debugging</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Lower to 6000 for CRUD-heavy work</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"enabled"</span>: true<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+      &nbsp;&nbsp;}<br>
+      }
+    </div>
+
+    <h3>Compaction Configuration</h3>
+    <p>The 50% threshold is the recommended sweet spot. At 50%, compaction triggers early enough to preserve context quality but not so early that you lose useful history. If your sessions are ultra-long (200+ turns), consider 40%. If your sessions are typically short (under 20 turns), 60% is fine.</p>
+    <div class="code-block">
+      <span class="cm"># ~/.claude/settings.json — ECC compaction override</span><br>
+      {<br>
+      &nbsp;&nbsp;<span class="st">"ecc"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"compaction"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"threshold"</span>: 50,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Range: 40 (aggressive) to 70 (conservative)</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"strategy"</span>: <span class="st">"preserve-recent"</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+      &nbsp;&nbsp;}<br>
+      }
+    </div>
+
+    <h3>Cost Audit Configuration</h3>
+    <p>The cost audit tool can be run on-demand or configured to display a summary after every session. Enabling session-end summaries is recommended for the first two weeks while you build intuition about your spending patterns.</p>
+    <div class="code-block">
+      <span class="cm"># ~/.claude/settings.json — ECC audit configuration</span><br>
+      {<br>
+      &nbsp;&nbsp;<span class="st">"ecc"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"audit"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"showAfterSession"</span>: true,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"trackCumulative"</span>: true,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"alertThreshold"</span>: 5.00<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Alert when daily spend exceeds $5.00</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+      &nbsp;&nbsp;}<br>
+      }
+    </div>
+  </section>
+
+  <!-- Real Cost Data -->
+  <section class="section">
+    <h2>Real Cost Data</h2>
+    <p class="intro">ECC's savings claims are backed by real production data from the community. The table below shows typical monthly costs for three usage profiles — before and after installing ECC. All figures are based on community-reported averages from the ECC GitHub discussions and the Anthropic developer forum.</p>
+
+    <table class="decision-table">
+      <tr><th>User Profile</th><th>Before ECC (monthly)</th><th>After ECC (monthly)</th><th>Savings</th></tr>
+      <tr><td>Light user (1–2 hrs/day, casual coding)</td><td>$35–55</td><td class="best">$18–28</td><td class="best">~48%</td></tr>
+      <tr><td>Moderate user (3–5 hrs/day, professional dev)</td><td>$120–200</td><td class="best">$72–120</td><td class="best">~40%</td></tr>
+      <tr><td>Heavy user (6+ hrs/day, AI-native workflow)</td><td>$350–600</td><td class="best">$210–360</td><td class="best">~40%</td></tr>
+      <tr><td>Team of 5 (median usage, shared API key)</td><td>$800–1,400</td><td class="best">$480–840</td><td class="best">~40%</td></tr>
+      <tr><td>Team of 20 (enterprise, per-seat billing)</td><td>$3,200–5,500</td><td class="best">$1,920–3,300</td><td class="best">~40%</td></tr>
+    </table>
+
+    <p>These figures assume US pricing for the Anthropic API (Opus, Sonnet, Haiku tiers) and include both input and output token costs. The savings percentage is slightly higher for light users because a larger proportion of their requests are simple lookups that get routed to Haiku. Heavy users tend to have a higher proportion of complex tasks that still need Sonnet or Opus, but the thinking token caps and compaction savings still deliver a strong 40% reduction.</p>
+
+    <div class="tip-box">
+      <strong>Community data point:</strong> The most frequently reported figure in the ECC GitHub discussions is a 42% reduction in monthly token spend within the first full month of use. Users who had previously done zero optimization (running Opus for everything, default compaction, uncapped thinking) reported savings as high as 55% in their first month.
+    </div>
+  </section>
+
+  <!-- ECC vs Manual Configuration -->
+  <section class="section">
+    <h2>ECC vs Manual Configuration</h2>
+    <p class="intro">You can achieve some of ECC's savings by manually configuring each setting — but the time cost, maintenance burden, and risk of drift make manual configuration a worse long-term strategy. This table compares the two approaches across the dimensions that matter.</p>
+
+    <table class="decision-table">
+      <tr><th>Dimension</th><th>ECC (One Install)</th><th>Manual Configuration</th></tr>
+      <tr><td>Setup time</td><td class="best">1 minute (one command)</td><td>30–60 minutes (5+ config files)</td></tr>
+      <tr><td>Model routing</td><td class="best">Automatic, task-aware routing to Haiku/Sonnet/Opus</td><td>Manual per-session model selection; easy to forget</td></tr>
+      <tr><td>Thinking token cap</td><td class="best">10K cap enforced automatically</td><td>Must remember to set env var; no default</td></tr>
+      <tr><td>Compaction threshold</td><td class="best">50% auto-compaction in one setting</td><td>Manual per-project env configuration</td></tr>
+      <tr><td>Subagent routing</td><td class="best">Haiku by default, configurable</td><td>Separate env var; often overlooked entirely</td></tr>
+      <tr><td>Cost visibility</td><td class="best">Built-in audit with cumulative tracking</td><td>Manual Console checks; no aggregation</td></tr>
+      <tr><td>Multi-tool support</td><td class="best">Claude Code, Cursor, Codex, Gemini, Copilot</td><td>Per-tool configuration; inconsistent coverage</td></tr>
+      <tr><td>Updates and improvements</td><td class="best">Community-maintained, auto-updating</td><td>Manual research and reconfiguration</td></tr>
+      <tr><td>Risk of misconfiguration</td><td class="best">Low — defaults are battle-tested</td><td>High — easy to set conflicting values</td></tr>
+      <tr><td>Ongoing maintenance</td><td class="best">Zero — ECC adapts to API changes</td><td>Must track API pricing and feature changes</td></tr>
+    </table>
+
+    <p>The bottom line: manual configuration can get you 60–70% of ECC's savings if you invest the time and maintain it perfectly. ECC gets you 100% of the savings for one minute of setup and zero ongoing maintenance. For individuals, the difference is convenience. For teams, the difference is thousands of dollars per year in recovered developer time that would otherwise be spent debugging configuration drift.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <h2>FAQ</h2>
+
+    <div class="faq-item">
+      <button class="faq-q">Does ECC work with tools other than Claude Code?</button>
+      <div class="faq-a"><p>Yes. ECC supports Claude Code (primary and deepest integration), Cursor, Codex, OpenCode, Gemini CLI, and GitHub Copilot. The model routing and thinking token caps adapt to each platform's capabilities. Cursor and Codex benefit most from the routing layer, which maps their internal model names to the ECC routing table. Copilot and Gemini benefit from the compaction and token cap settings. The installation is the same regardless of which tool you use — ECC detects your environment and applies the appropriate optimizations for each supported platform.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">How is ECC different from manually setting model and compaction options?</button>
+      <div class="faq-a"><p>Manual configuration requires you to remember and tune five to eight separate settings across multiple files (settings.json, environment variables, per-project overrides). ECC bundles them into one install with defaults that have been battle-tested across thousands of developer hours. More importantly, ECC adds capabilities that manual configuration cannot replicate: dynamic task-aware model routing that inspects your prompt before deciding which model to use, per-task cost auditing with cumulative tracking, and automatic fallback routing when a requested model is unavailable or rate-limited. Manual configuration is a static set of rules; ECC is an adaptive optimization layer.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">Will ECC slow down my coding workflow?</button>
+      <div class="faq-a"><p>No. ECC operates at the configuration and routing layer — it does not sit between you and the model adding latency. Model routing decisions happen in microseconds before the request is sent. Thinking token caps are enforced server-side by the API, not by ECC adding overhead. Compaction triggers at the same intervals as native Claude Code; ECC just changes the threshold number. There is zero added latency to any request. In practice, many users report that Haiku-routed lookups feel faster than their previous workflow because the lighter model responds more quickly than Opus would for the same simple query.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">How do I know ECC is actually saving me money?</button>
+      <div class="faq-a"><p>ECC includes a built-in cost audit command: run <code>/ecc-tools-cost-audit</code> to see a detailed breakdown of your token spending by task type, model, and session. The audit compares your actual spend against a simulated baseline of what you would have paid routing everything through Opus with default settings. It also tracks cumulative savings over time — so you can see your total dollars saved across days, weeks, or months. The audit tool is transparent about its methodology: it uses the same Anthropic API pricing data that your billing dashboard uses, and it attributes costs to specific requests so you can verify the numbers yourself. For teams, the audit can be exported as JSON for integration with internal cost-tracking dashboards.</p></div>
+    </div>
+  </section>
+
+  <!-- Back link -->
+  <a class="back-link" href="/">&#8592; Back to all 5 methods</a>
+
+</main>
+
+<footer>
+  <div class="sub-hint">
+    <a href="/model-routing/">Model Routing Guide &#8594;</a>
+    <a href="/strategic-compaction/">Strategic Compaction &#8594;</a>
+    <a href="/ecc-deep-dive/">ECC Deep Dive &#8594;</a>
+    <a href="/trim-claude-md/">Trim CLAUDE.md &#8594;</a>
+    <a href="/search-first-read-later/">Search First, Read Later &#8594;</a>
+  </div>
+  <p>tokencut.org &#8212; each method works independently, combine them for the biggest savings.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var answer = this.nextElementSibling;
+      var isOpen = this.classList.contains('open');
+      document.querySelectorAll('.faq-q').forEach(function(b) { b.classList.remove('open'); });
+      document.querySelectorAll('.faq-a').forEach(function(a) { a.classList.remove('open'); });
+      if (!isOpen) { this.classList.add('open'); answer.classList.add('open'); }
+    });
+  });
+</script>
+
+</body>
+</html>

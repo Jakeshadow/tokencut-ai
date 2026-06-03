@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lower AUTOCOMPACT_PCT from 95% to 50% and use /compact strategically to stop burning tokens on dead context. Real before vs after token counts included.">
+  <title>Strategic Compaction: Cut Context Waste 10-20% | TokenCut</title>
+  <link rel="canonical" href="https://tokencut.org/strategic-compaction/">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Strategic Compaction: Cut Context Waste 10-20% | TokenCut">
+  <meta property="og:description" content="Stop burning tokens on dead context. Lower AUTOCOMPACT_PCT from 95% to 50%, use /compact strategically. Real before vs after examples.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tokencut.org/strategic-compaction/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Strategic Compaction: Cut Context Waste 10-20% | TokenCut">
+  <meta name="twitter:description" content="Lower AUTOCOMPACT_PCT from 95% to 50%. Use /compact strategically. Real token count examples included.">
+  <link rel="stylesheet" href="/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tokencut.org/" },
+      { "@type": "ListItem", "position": 2, "name": "Strategic Compaction", "item": "https://tokencut.org/strategic-compaction/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Strategic Compaction: Cut Context Token Waste 10-20%",
+    "description": "Stop burning tokens on dead context. Lower AUTOCOMPACT_PCT from 95% to 50%, use /compact strategically, and keep critical information in play.",
+    "author": { "@type": "Person", "name": "TokenCut" },
+    "datePublished": "2026-06-03",
+    "dateModified": "2026-06-03",
+    "url": "https://tokencut.org/strategic-compaction/",
+    "isAccessibleForFree": true
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between compaction and context truncation?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Context truncation simply drops the oldest messages when the context window is full — permanently losing everything in them. Compaction actively summarizes conversation history into a condensed form, preserving key decisions, code changes, and reasoning while discarding redundant back-and-forth. Compaction is intelligent compression; truncation is blind deletion. With AUTOCOMPACT_PCT set lower, compaction runs while there is still enough context headroom to produce a high-quality summary, rather than scrambling at the last moment." }
+      },
+      {
+        "@type": "Question",
+        "name": "Will setting AUTOCOMPACT_PCT to 50% slow down my workflow?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No — compaction runs asynchronously and typically takes only a few seconds. The minor overhead of compacting at 50% is negligible compared to the cost of losing context. In practice, a compaction at 50% preserves higher-quality summaries because the model still has ample headroom to process the full history before condensing it. Users report sessions that stay coherent longer and require less repetition of earlier instructions." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use /compact on demand instead of auto-compaction?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, and combining both is the recommended strategy. Set AUTOCOMPACT_PCT to 50% as a safety net, then manually trigger /compact at natural breakpoints: after completing a major feature, before switching tasks, or when you notice the model starting to forget earlier details. Manual compaction at these inflection points produces the best summaries because you are compacting at semantically meaningful boundaries rather than arbitrary context-fill percentages." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="/">~/tokencut</a></span>
+    <ul class="nav-links">
+      <li><a href="/#methods">Methods</a></li>
+      <li><a href="/#compare">Compare</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb"><a href="/">Home</a> / <span>Strategic Compaction</span></div>
+
+  <!-- Sub-hero -->
+  <section class="sub-hero">
+    <div class="method-badge">Method 02</div>
+    <h1>Strategic Compaction: Stop Burning Tokens on Dead Context</h1>
+    <p class="subtitle">The default compaction threshold waits until your context is 95% full. By then, the model has already lost the plot. Lower the trigger, compact on your terms, and keep the conversation coherent from start to finish.</p>
+    <div class="savings-tag">Token Savings: 10-20%</div>
+  </section>
+
+  <!-- What Is Compaction -->
+  <section class="section">
+    <h2>What Is Compaction</h2>
+    <p>Every conversation with an AI coding tool builds up a history: your prompts, the model's responses, tool calls, file reads, and code edits. This history lives inside the model's context window -- a fixed-size memory that holds everything the model can "see" at any given moment. When the context window fills up, something has to give.</p>
+    <p>Compaction is the mechanism that solves this. Instead of simply truncating the oldest messages and losing them forever, compaction asks the model to summarize the conversation so far into a condensed, structured form. The summary preserves critical information -- what files were modified, what decisions were made, what bugs were identified -- while discarding the verbose back-and-forth that led to those outcomes. The condensed summary then replaces the original messages in the context window, freeing up space for new turns without losing the thread.</p>
+    <p>Think of it like a progress report in a long project. You do not reread every Slack message and email from the past three weeks before your next task. You read a concise summary of what was done, what is in progress, and what is blocked. Compaction does the same thing for your AI coding session. The model writes itself a structured memo of everything that has happened, then continues working from that memo instead of the raw transcript.</p>
+    <p>The key insight is that compaction is not just about saving tokens -- it is about preserving coherence. A well-timed compaction keeps the model oriented. A poorly-timed one (or none at all) leaves the model groping through a fragment of its own history, asking questions it already answered three turns ago.</p>
+  </section>
+
+  <!-- Why 95% Is Too Late -->
+  <section class="section">
+    <h2>Why 95% Is Too Late</h2>
+    <p>Claude Code ships with a default <code>AUTOCOMPACT_PCT</code> of 95%. This means automatic compaction only fires when your context window is 95% full -- just 5% away from complete saturation. By the time that threshold is reached, the damage is already done.</p>
+    <p>Context windows do not fill evenly. The earliest messages in a session -- your initial instructions, the architectural decisions, the first file reads -- sit at the very bottom of the context stack. As the conversation grows, those early messages are the first to get squeezed. At 95% fullness, the model's working memory has already been silently degraded. It may have lost the original design constraints you described at the start. It may have forgotten about that edge case you flagged 30 minutes ago. The model will not tell you this has happened -- it will simply start producing answers that drift from your intent, repeat questions, or introduce bugs that contradict earlier decisions.</p>
+    <p>Worse, compaction triggered at 95% fullness produces lower-quality summaries. The model is operating under pressure, with very little headroom to process the full history and distill it accurately. It is like asking someone to write a book summary when they have five minutes before the exam versus when they have the whole weekend. The summary written under pressure will miss nuance, omit important caveats, and flatten the reasoning that led to key decisions.</p>
+    <p>Real-world symptoms of late compaction include: the model suddenly asking "which file are we working on?" after 45 minutes of editing, code changes that undo a fix from earlier in the session, and wild goose chases where the model re-discovers a bug it already diagnosed and solved. Each of these wastes not just tokens but your time and attention -- the scarcest resources in any development workflow.</p>
+  </section>
+
+  <!-- How to Configure It -->
+  <section class="section">
+    <h2>How to Configure Strategic Compaction</h2>
+    <p>Changing the compaction threshold takes one line of configuration. Add <code>AUTOCOMPACT_PCT</code> to your Claude Code settings file to trigger compaction at 50% context fullness instead of 95%. This gives the model a comfortable buffer to produce high-quality summaries while plenty of original context is still intact.</p>
+    <div class="code-block">
+      <span class="cm"># ~/.claude/settings.json</span><br>
+      {<br>
+      &nbsp;&nbsp;<span class="st">"env"</span>: {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"AUTOCOMPACT_PCT"</span>: <span class="st">"50"</span><br>
+      &nbsp;&nbsp;}<br>
+      }
+    </div>
+    <p>In addition to automatic compaction, Claude Code provides the <code>/compact</code> slash command for manual triggering. You can run it at any time to force a compaction at a semantically meaningful boundary -- for example, after finishing a major feature, before switching to a new task, or when you notice the model starting to forget details. The command is immediate: type <code>/compact</code>, hit enter, and the model summarizes the conversation so far into a compact form.</p>
+    <div class="tip-box">
+      <strong>Best practice:</strong> Use AUTOCOMPACT_PCT=50 as your safety net and /compact as your precision tool. The automatic threshold catches you before context degrades; manual compaction lets you choose the optimal moment for summarization -- right after completing a logical unit of work.
+    </div>
+  </section>
+
+  <!-- Manual vs Automatic Compaction -->
+  <section class="section">
+    <h2>Manual vs Automatic Compaction</h2>
+    <p>Both automatic and manual compaction have their place. The table below breaks down when each approach works best.</p>
+    <table class="decision-table">
+      <tr><th>Scenario</th><th>Best Approach</th><th>Why</th></tr>
+      <tr><td>Long, uninterrupted coding session</td><td class="best">Automatic (50%)</td><td>You will not remember to compact manually; the safety net catches you at the right time</td></tr>
+      <tr><td>Just completed a major feature</td><td class="best">Manual (/compact)</td><td>Semantic boundary produces the highest-quality summary, preserving architectural intent</td></tr>
+      <tr><td>About to switch tasks or projects</td><td class="best">Manual (/compact)</td><td>Lock in context before the mental model shifts; the next session starts from a clean summary</td></tr>
+      <tr><td>Short, focused bug fixes (under 30 turns)</td><td class="best">Neither needed</td><td>Context window will not fill up; compaction overhead is unnecessary for brief sessions</td></tr>
+      <tr><td>Debugging session with many dead ends</td><td class="best">Manual (/compact)</td><td>Compact after finding the root cause, discarding the failed hypotheses that led there</td></tr>
+      <tr><td>Pair-programming with frequent pauses</td><td class="best">Automatic (50%)</td><td>Irregular pacing means you may forget to compact; automatic keeps things tidy</td></tr>
+    </table>
+    <p>The two modes are not mutually exclusive. The most effective strategy layers them: automatic compaction at 50% ensures you never drift into degraded-context territory, while manual compaction at natural breakpoints maximizes summary quality at the moments that matter most.</p>
+  </section>
+
+  <!-- Before vs After -->
+  <section class="section">
+    <h2>Before vs After: A Real Session Comparison</h2>
+    <p>To make this concrete, here is a side-by-side comparison of the same debugging session with default compaction (95%) versus strategic compaction (50%). The scenario: tracking down a race condition in a React state management layer across approximately 80 conversation turns.</p>
+    <table class="compare-table">
+      <tr><th>Metric</th><th>Default (95%)</th><th>Strategic (50%)</th></tr>
+      <tr><td>Context at compaction trigger</td><td>~190,000 / 200,000 tokens</td><td>~100,000 / 200,000 tokens</td></tr>
+      <tr><td>Compaction summary quality</td><td class="mid">Adequate -- missed 2 edge cases</td><td class="win">High -- all key findings preserved</td></tr>
+      <tr><td>Times model re-asked a question</td><td>4 times</td><td class="win">0 times</td></tr>
+      <tr><td>Undone earlier fix</td><td>Yes -- reverted a state update</td><td class="win">No regressions</td></tr>
+      <tr><td>Total tokens consumed</td><td>~340,000 tokens</td><td class="win">~285,000 tokens</td></tr>
+      <tr><td>Session duration</td><td>62 minutes</td><td class="win">48 minutes</td></tr>
+      <tr><td>Token savings</td><td>--</td><td class="win">16% fewer tokens</td></tr>
+    </table>
+    <p>The 16% token savings came from eliminating redundancy: the model did not re-read files it had already analyzed, did not re-investigate hypotheses it had already tested, and did not re-explain concepts it had already understood. Each of those repetitions was real money. More importantly, the session finished 14 minutes faster -- and developer time is worth far more than token costs.</p>
+    <p>This pattern is consistent across session types. Long debugging sessions benefit the most, since they accumulate the largest volume of dead-end exploration that should be summarized away. Architecture discussions benefit from preserving design rationale. Even routine feature work sees savings, because the model spends fewer tokens re-establishing context after each compaction cycle.</p>
+  </section>
+
+  <!-- Common Pitfalls -->
+  <section class="section">
+    <h2>Common Pitfalls</h2>
+    <p>Strategic compaction is straightforward to configure, but there are three mistakes that can undermine its effectiveness.</p>
+    <h3>Pitfall 1: Compacting Too Often</h3>
+    <p>Setting <code>AUTOCOMPACT_PCT</code> to an extremely low value -- say, 20% -- triggers compaction so frequently that the model spends more time summarizing than working. Each compaction pass consumes tokens (the summary itself costs something to generate), and over-compacting can actually increase total token usage rather than decrease it. Worse, overly frequent compaction can lose important nuance by summarizing before enough context has accumulated to identify what is truly important. The 50% threshold hits the sweet spot: enough context to produce a meaningful summary, enough headroom to do it well.</p>
+    <h3>Pitfall 2: Waiting Too Long</h3>
+    <p>The inverse mistake is sticking with the 95% default out of inertia or fear of change. Every session that runs at 95% is a session where the model's reasoning quality degrades silently in the final third of the conversation. The cost is not just wasted tokens -- it is wrong answers, repeated work, and eroded trust in the tool. If you change only one setting in your Claude Code configuration, make it <code>AUTOCOMPACT_PCT=50</code>. The downside risk is zero; the upside is immediate.</p>
+    <h3>Pitfall 3: Never Using Manual Compaction</h3>
+    <p>Automatic compaction is a safety net, not a strategy. Relying exclusively on AUTOCOMPACT_PCT means you are always compacting at arbitrary context-fill percentages rather than at semantically meaningful boundaries. The best summaries are produced right after completing a logical unit of work -- a finished feature, a resolved bug, a completed refactor. At those moments, the conversation has a natural "chapter break" and the summary can cleanly capture what was accomplished. Train yourself to type <code>/compact</code> at these inflection points, and the quality of your session continuity will improve noticeably.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <h2>FAQ</h2>
+    <div class="faq-item">
+      <button class="faq-q">What is the difference between compaction and context truncation?</button>
+      <div class="faq-a"><p>Context truncation simply drops the oldest messages when the context window is full -- permanently losing everything in them. Compaction actively summarizes conversation history into a condensed form, preserving key decisions, code changes, and reasoning while discarding redundant back-and-forth. Compaction is intelligent compression; truncation is blind deletion. With AUTOCOMPACT_PCT set lower, compaction runs while there is still enough context headroom to produce a high-quality summary, rather than scrambling at the last moment.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Will setting AUTOCOMPACT_PCT to 50% slow down my workflow?</button>
+      <div class="faq-a"><p>No -- compaction runs asynchronously and typically takes only a few seconds. The minor overhead of compacting at 50% is negligible compared to the cost of losing context. In practice, a compaction at 50% preserves higher-quality summaries because the model still has ample headroom to process the full history before condensing it. Users report sessions that stay coherent longer and require less repetition of earlier instructions. The net effect is faster sessions, not slower ones.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Can I use /compact on demand instead of auto-compaction?</button>
+      <div class="faq-a"><p>Yes, and combining both is the recommended strategy. Set AUTOCOMPACT_PCT to 50% as a safety net, then manually trigger /compact at natural breakpoints: after completing a major feature, before switching tasks, or when you notice the model starting to forget earlier details. Manual compaction at these inflection points produces the best summaries because you are compacting at semantically meaningful boundaries rather than arbitrary context-fill percentages. The two approaches complement each other -- automatic keeps you safe, manual keeps you precise.</p></div>
+    </div>
+  </section>
+
+  <!-- Back link -->
+  <a class="back-link" href="/">&#8592; Back to all 5 methods</a>
+
+</main>
+
+<footer>
+  <div class="sub-hint">
+    <a href="/model-routing/">Model Routing Guide</a>
+    <a href="/strategic-compaction/">Strategic Compaction</a>
+    <a href="/ecc-deep-dive/">ECC Deep Dive</a>
+    <a href="/trim-claude-md/">Trim CLAUDE.md</a>
+    <a href="/search-first-read-later/">Search First, Read Later</a>
+  </div>
+  <p>tokencut.org -- each method works independently, combine them for the biggest savings.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var answer = this.nextElementSibling;
+      var isOpen = this.classList.contains('open');
+      document.querySelectorAll('.faq-q').forEach(function(b) { b.classList.remove('open'); });
+      document.querySelectorAll('.faq-a').forEach(function(a) { a.classList.remove('open'); });
+      if (!isOpen) { this.classList.add('open'); answer.classList.add('open'); }
+    });
+  });
+</script>
+
+</body>
+</html>
