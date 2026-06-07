@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="msvalidate.01" content="7FF70277A3901FABDFB5647507DE4541">
+  <meta name="description" content="Context headroom: how much room is left in your AI coding tool's context window before it overflows? Measure, monitor, and manage your token budget.">
+  <title>Context Headroom — Don't Run Out of Token Space Mid-Session</title>
+  <link rel="canonical" href="https://tokencut.org/context-headroom/">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Context Headroom — Don't Run Out of Token Space Mid-Session">
+  <meta property="og:description" content="What is context headroom, how to measure it, and why running out kills your output quality. Tools and techniques to stay in the safe zone.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tokencut.org/context-headroom/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Context Headroom — Don't Run Out of Token Space Mid-Session">
+  <meta name="twitter:description" content="Measure your context headroom before it runs out. The fuel gauge for your AI coding sessions.">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .gauge-wrap { text-align: center; margin: 24px 0; }
+    .gauge-label { font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .gauge-track { width: 100%; max-width: 400px; margin: 0 auto; height: 12px; background: var(--border); border-radius: 6px; overflow: hidden; }
+    .gauge-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+    .gauge-fill.safe { background: var(--green); }
+    .gauge-fill.warn { background: var(--orange); }
+    .gauge-fill.danger { background: var(--red); }
+    .gauge-legend { display: flex; justify-content: space-between; max-width: 400px; margin: 4px auto 0; font-size: 0.72rem; color: var(--text-secondary); font-family: var(--font-mono); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tokencut.org/" },
+      { "@type": "ListItem", "position": 2, "name": "Context Headroom Guide", "item": "https://tokencut.org/context-headroom/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Context Headroom — How to Measure and Manage Your Token Budget",
+    "description": "What context headroom is, how to measure it, and why running out mid-session kills your output quality. Practical tools and techniques to stay in the safe zone.",
+    "author": { "@type": "Person", "name": "TokenCut" },
+    "datePublished": "2026-06-08",
+    "dateModified": "2026-06-08",
+    "url": "https://tokencut.org/context-headroom/",
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="/">~/tokencut</a></span>
+    <ul class="nav-links">
+      <li><a href="/#methods">Methods</a></li>
+      <li><a href="/#compare">Compare</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+  <div class="breadcrumb"><a href="/">Home</a> / <span>Context Headroom</span></div>
+
+  <section class="sub-hero">
+    <div class="method-badge">Concept</div>
+    <h1>Context Headroom: The Fuel Gauge for AI Coding Sessions</h1>
+    <p class="subtitle">Every AI coding tool has a context limit. Headroom is how much space is left before you hit it. Run out mid-session and the model forgets everything that came before — including the bug you were fixing and the architecture you just explained.</p>
+  </section>
+
+  <!-- What is Headroom -->
+  <section class="section">
+    <h2>What Is Context Headroom?</h2>
+    <p class="intro">Think of your AI tool's context window like a whiteboard. Every prompt, every file read, every model response writes more on the board. When the board is full, the oldest writing gets erased to make room. Headroom is the empty space left on the board — when it hits zero, you lose information.</p>
+
+    <p>In technical terms: Claude Code, Cursor, and Codex all operate within a context window — typically 200K tokens for Claude, 128K for GPT-4. This window holds your system prompt, rules files (CLAUDE.md, .cursorrules), code files you've read, your conversation history, and the model's responses. Everything in the window is "visible" to the model; everything pushed out is forgotten.</p>
+
+    <p><strong>Headroom = context window size − tokens currently in use.</strong> At the start of a fresh session, you might have ~190K tokens of headroom. Twenty turns, five file reads, and one compaction later, you might have 30K — or 0.</p>
+
+    <div class="gauge-wrap">
+      <div class="gauge-label">Context Usage Gauge</div>
+      <div style="display:flex;gap:14px;align-items:center;max-width:420px;margin:0 auto 8px;">
+        <div class="gauge-track"><div class="gauge-fill safe" style="width:35%"></div></div>
+        <span style="font-family:var(--font-mono);font-size:0.85rem;color:var(--green);white-space:nowrap;">70K / 200K</span>
+      </div>
+      <div class="gauge-legend"><span>0</span><span>50K</span><span>100K</span><span>150K</span><span>200K</span></div>
+      <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">Healthy. 130K tokens of headroom remaining.</p>
+    </div>
+
+    <div class="gauge-wrap">
+      <div class="gauge-label">Running Low</div>
+      <div style="display:flex;gap:14px;align-items:center;max-width:420px;margin:0 auto 8px;">
+        <div class="gauge-track"><div class="gauge-fill danger" style="width:92%"></div></div>
+        <span style="font-family:var(--font-mono);font-size:0.85rem;color:var(--red);white-space:nowrap;">184K / 200K</span>
+      </div>
+      <p style="font-size:0.78rem;color:var(--red);margin-top:4px;">Danger zone. 16K headroom — one file read away from losing context.</p>
+    </div>
+  </section>
+
+  <!-- Why Headroom Matters -->
+  <section class="section">
+    <h2>Why Running Out Kills Your Output</h2>
+    <p class="intro">Low headroom doesn't just mean the model forgets things. It causes three specific failures that degrade your session.</p>
+
+    <h3>1. Silent Amnesia</h3>
+    <p>The model stops referencing information you discussed 20 turns ago — not because it's ignoring you, but because that information was evicted from the context window. You might not notice immediately. The bug you described in detail at the start of the session? Gone. The architecture decision you made together? Reverted. The model appears to "forget" — but it's just working with incomplete information.</p>
+
+    <h3>2. Compaction Degradation</h3>
+    <p>When context fills up, the tool triggers compaction — summarizing the conversation to free space. But compaction quality depends on how much context is still available. Compacting at 95% full (the Claude Code default) produces worse summaries than compacting at 50% full, because the model has less "working room" to think about what's important. Low headroom → bad compaction → lost nuance → worse output.</p>
+
+    <h3>3. Forced Session Restarts</h3>
+    <p>Eventually, the model hits the hard context limit and refuses to continue. You have to start a new session and re-explain everything. This isn't just annoying — it's expensive. Every token you spent building shared understanding in the old session is wasted. In long debugging sessions, hitting the wall means losing hours of context that can't be fully reconstructed.</p>
+  </section>
+
+  <!-- How to Measure -->
+  <section class="section">
+    <h2>How to Measure Your Headroom</h2>
+    <p class="intro">Most AI coding tools don't show you a headroom gauge by default. Here's how to check it in each tool.</p>
+
+    <h3>Claude Code</h3>
+    <p>Claude Code displays context usage after each response as a percentage. Watch for the <code>Context: 87%</code> indicator in the terminal output. When it crosses 80%, you're entering the danger zone.</p>
+    <div class="code-block">
+      <span class="cm"># Check context usage during a session</span><br>
+      /context<br><br>
+      <span class="cm"># Set compaction to trigger earlier (recommended)</span><br>
+      <span class="kw">export</span> AUTOCOMPACT_PCT=50
+    </div>
+
+    <h3>Cursor</h3>
+    <p>Cursor shows context usage in the bottom bar of the chat panel. Look for the token counter. In Settings → Models, you can see your current context window size per model. The Composer agent mode shows more detailed usage than the sidebar chat.</p>
+
+    <h3>Codex / OpenCode</h3>
+    <p>OpenCode displays context usage as a token count in the session header. It also warns when approaching the model's limit. For Codex, check the session info panel (Cmd/Ctrl + I) for current token count.</p>
+
+    <h3>Manual Calculation (any tool)</h3>
+    <p>If your tool doesn't show headroom natively, estimate it: count your file reads (each ~500–2,000 tokens), conversation turns (~200–1,000 tokens each), and model responses (~500–4,000 tokens each). Subtract from your model's context limit. It's imprecise, but better than flying blind.</p>
+  </div>
+
+  <!-- How to Stay in the Safe Zone -->
+  <section class="section">
+    <h2>How to Stay in the Safe Zone</h2>
+    <p class="intro">Headroom management is a habit, not a configuration change. These five practices keep you safely below 70% usage.</p>
+
+    <table class="decision-table">
+      <tr><th>Practice</th><th>Impact</th><th>How</th></tr>
+      <tr>
+        <td><strong>Compact early</strong></td>
+        <td class="best">Preserves 40–60K tokens per session</td>
+        <td>Set AUTOCOMPACT_PCT=50. Don't wait for the default 95% — by then context quality is already degraded.</td>
+      </tr>
+      <tr>
+        <td><strong>Search before reading</strong></td>
+        <td class="best">Saves 80% of file-read tokens</td>
+        <td>Use grep/glob to locate, Read only the relevant function or section. Don't load entire files for one line.</td>
+      </tr>
+      <tr>
+        <td><strong>Trim rules files</strong></td>
+        <td class="best">Frees 5–20K tokens baseline</td>
+        <td>CLAUDE.md under 10 lines. .cursorrules under 20 lines. Every line loads into every session before you type a word.</td>
+      </tr>
+      <tr>
+        <td><strong>Start fresh for new tasks</strong></td>
+        <td class="best">Resets headroom to 100%</td>
+        <td>Don't fix two unrelated bugs in the same session. Each bug gets a fresh context window, full headroom.</td>
+      </tr>
+      <tr>
+        <td><strong>Use subagents for exploration</strong></td>
+        <td class="best">Offloads 30–50K tokens per session</td>
+        <td>Spawn subagents for file search, test running, and codebase exploration. Their context is separate from your main session.</td>
+      </tr>
+    </table>
+
+    <div class="tip-box">
+      <strong>Rule of thumb:</strong> If context usage crosses 70%, compact immediately (or start wrapping up). Above 85%, the model is already losing fidelity. The zone between 0–50% is where your AI coding tool performs at its best — plenty of room for reasoning, file reads, and multi-turn problem solving.
+    </div>
+  </section>
+
+  <!-- Headroom and Token Savings -->
+  <section class="section">
+    <h2>Headroom and Token Savings: Two Sides of the Same Coin</h2>
+    <p class="intro">Managing headroom isn't just about avoiding crashes — it's a token optimization strategy in itself. Every token you keep in the safe zone is a token you don't waste re-explaining things.</p>
+
+    <p>The five methods on this site all increase your effective headroom:</p>
+    <ul>
+      <li><strong>Model Routing</strong> — cheaper models = less budget anxiety = you don't prematurely compact to save money</li>
+      <li><strong>Strategic Compaction</strong> — compact at 50% → reclaims headroom before it's critical</li>
+      <li><strong>ECC</strong> — automates all headroom-preserving settings in one install</li>
+      <li><strong>Trim CLAUDE.md</strong> — removes baseline token consumption → more headroom for actual work</li>
+      <li><strong>Search First</strong> — prevents unnecessary file reads from consuming headroom</li>
+    </ul>
+
+    <p>Each method independently preserves headroom. Combined, they compound: a trimmed CLAUDE.md frees baseline tokens, search-first prevents unnecessary reads, early compaction reclaims space before it's gone, and model routing removes cost anxiety that makes you prematurely compact. The result: you stay in the safe zone longer, across more tasks, without consciously managing headroom.</p>
+  </section>
+
+  <!-- Connection to TokenCut -->
+  <section class="section">
+    <h2>Headroom Is the Why Behind TokenCut</h2>
+    <p>Every method on TokenCut — model routing, compaction, ECC, rule trimming, search-first — is fundamentally about managing headroom. Token savings are the measurable outcome. Headroom is the mechanism. When you understand headroom, the five methods stop being a checklist and become a system: each one protects a different part of your context budget.</p>
+
+    <div class="tip-box">
+      <strong>Start measuring today:</strong> In your next AI coding session, note the context percentage after every 5 turns. You'll likely find it climbs faster than you expected — and that awareness alone will change how you use the tool.
+    </div>
+  </section>
+
+  <a class="back-link" href="/">&#8592; Back to all 5 methods</a>
+
+</main>
+
+<footer>
+  <div class="sub-hint">
+    <a href="/model-routing/">Model Routing Guide &#8594;</a>
+    <a href="/strategic-compaction/">Strategic Compaction &#8594;</a>
+    <a href="/ecc-deep-dive/">ECC Deep Dive &#8594;</a>
+    <a href="/trim-claude-md/">Trim CLAUDE.md &#8594;</a>
+    <a href="/search-first-read-later/">Search First, Read Later &#8594;</a>
+  </div>
+  <p>tokencut.org &#8212; each method works independently, combine them for the biggest savings.</p>
+</footer>
+
+</body>
+</html>
