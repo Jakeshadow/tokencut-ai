@@ -203,3 +203,102 @@ footer .sub-hint a:hover { border-color: var(--accent-dim); color: var(--accent)
   .method-header h3 { font-size: 0.95rem; }
   .sub-hero .subtitle { font-size: 0.9rem; }
 }
+
+/* Token Counter */
+.tk-counter {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: -12px;
+  margin-bottom: 36px;
+}
+.tk-textarea {
+  width: 100%;
+  min-height: 160px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.tk-textarea:focus { border-color: var(--accent); }
+.tk-textarea::placeholder { color: var(--text-secondary); opacity: 0.5; }
+.tk-results {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.tk-stat {
+  flex: 1;
+  min-width: 100px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.tk-stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--green);
+  line-height: 1.2;
+}
+.tk-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+.tk-saved { color: var(--green); }
+.tk-compare-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  color: var(--accent);
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.tk-compare-toggle:hover { border-color: var(--accent); background: rgba(88,166,255,0.06); }
+.tk-compare-toggle.active { background: rgba(88,166,255,0.1); border-color: var(--accent); }
+.tk-compare-panel { display: none; margin-top: 16px; }
+.tk-compare-panel.visible { display: block; }
+.tk-compare-label {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 10px 0 6px;
+}
+.tk-compare-label span { color: var(--accent); }
+.tk-diff {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.tk-diff .tk-saved-amount {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .tk-results { gap: 12px; }
+  .tk-stat-value { font-size: 1.3rem; }
+  .tk-diff { gap: 12px; }
+}

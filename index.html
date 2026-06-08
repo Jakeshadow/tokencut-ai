@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="msvalidate.01" content="7FF70277A3901FABDFB5647507DE4541">
-  <meta name="description" content="5 practical ways to cut AI coding costs: model routing, strategic compaction, ECC, prompt cleanup, and targeted reads — tools you can use today.">
-  <title>5 Ways to Reduce Token Usage (That Actually Work)</title>
+  <meta name="description" content="Free online token counter — paste your text, see exact token count and cost. Plus 5 proven methods to cut AI token usage by 30-50%.">
+  <title>Token Counter — Count Tokens & Cut AI Costs (Free, No Login)</title>
   <link rel="canonical" href="https://tokencut.org/">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="5 Ways to Reduce Token Usage (That Actually Work)">
-  <meta property="og:description" content="Cut AI coding costs with 5 practical methods — model routing, strategic compaction, ECC, prompt cleanup, and targeted reads. Real tools, no fluff.">
+  <meta property="og:title" content="Token Counter — Count Tokens & Cut AI Costs (Free, No Login)">
+  <meta property="og:description" content="Free online token counter + 5 proven methods to cut AI token usage by 30-50%. Paste text, see exact count. No login required.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://tokencut.org/">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="5 Ways to Reduce Token Usage (That Actually Work)">
-  <meta name="twitter:description" content="5 practical ways to cut AI coding costs. Model routing, strategic compaction, ECC, prompt cleanup, targeted reads. Real tools included.">
+  <meta name="twitter:title" content="Token Counter — Count Tokens & Cut AI Costs (Free)">
+  <meta name="twitter:description" content="Free token counter + 5 proven ways to cut AI usage by 30-50%. Paste, count, save. No login.">
   <link rel="stylesheet" href="/style.css">
   <script type="application/ld+json">
   {
@@ -30,11 +30,11 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "5 Ways to Reduce Token Usage (That Actually Work)",
-    "description": "5 practical ways to reduce token usage and cut AI coding costs. Model routing, strategic compaction, ECC harness optimization, prompt cleanup, and targeted reads.",
+    "headline": "Token Counter — Count Tokens & Cut AI Costs (Free, No Login)",
+    "description": "Free online token counter + 5 proven methods to cut AI token usage by 30-50%. Paste text, see exact count. Model routing, strategic compaction, ECC, prompt cleanup, targeted reads.",
     "author": { "@type": "Person", "name": "TokenCut" },
     "datePublished": "2026-06-03",
-    "dateModified": "2026-06-03",
+    "dateModified": "2026-06-09",
     "url": "https://tokencut.org/",
     "isAccessibleForFree": true
   }
@@ -77,6 +77,7 @@
     ]
   }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@2.8.1/dist/gpt-tokenizer.min.js"></script>
 </head>
 <body>
 
@@ -84,6 +85,7 @@
   <div class="nav-inner">
     <span class="nav-logo"><a href="/">~/tokencut</a></span>
     <ul class="nav-links">
+      <li><a href="/#counter">Counter</a></li>
       <li><a href="/#methods">Methods</a></li>
       <li><a href="/#compare">Compare</a></li>
       <li><a href="/#faq">FAQ</a></li>
@@ -95,14 +97,87 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-badge">$ SAVINGS AVAILABLE</div>
-    <h1>5 Ways to Reduce Token Usage (That Actually Work)</h1>
-    <p class="subtitle">Your AI coding tool is burning tokens on things you don't need. Here's how to cut 30–50% of your token spend — each method includes a real tool you can use today.</p>
+    <div class="hero-badge">FREE TOKEN COUNTER — NO LOGIN</div>
+    <h1>Token Counter — Count Tokens & Cut AI Costs</h1>
+    <p class="subtitle">Paste your text below for an instant token count. Then learn 5 proven methods to cut AI token usage by 30–50% — each with a real tool you can use today.</p>
     <div class="cost-bite">
       <span>Typical savings per session:</span>
       <span class="dollar">$0.30 → $0.12</span>
     </div>
   </section>
+
+  <!-- Token Counter Tool -->
+  <section class="tk-counter" id="counter">
+    <button class="tk-compare-toggle" id="tkCompareBtn" onclick="toggleCompare()">
+      <span id="tkCompareIcon">+</span> Compare Before / After
+    </button>
+    <textarea class="tk-textarea" id="tkInput" placeholder="Paste your text, prompt, or code here to count tokens... Cl100k_base encoding (same as GPT-4 &amp; Claude)" oninput="countTokens()"></textarea>
+    <div class="tk-results" id="tkResults">
+      <div class="tk-stat">
+        <div class="tk-stat-value" id="tkCount">0</div>
+        <div class="tk-stat-label">Tokens</div>
+      </div>
+      <div class="tk-stat">
+        <div class="tk-stat-value" id="tkChars">0</div>
+        <div class="tk-stat-label">Characters</div>
+      </div>
+      <div class="tk-stat">
+        <div class="tk-stat-value" id="tkCost">$0.000</div>
+        <div class="tk-stat-label">Est. Cost (Opus)</div>
+      </div>
+    </div>
+    <div class="tk-compare-panel" id="tkComparePanel">
+      <div class="tk-compare-label">After optimization — <span>paste your optimized text here</span></div>
+      <textarea class="tk-textarea" id="tkInputAfter" placeholder="Paste optimized text here to compare savings..." oninput="countTokens()"></textarea>
+      <div class="tk-diff" id="tkDiff">
+        <div class="tk-stat">
+          <div class="tk-stat-value tk-saved" id="tkSaved">—</div>
+          <div class="tk-stat-label">Tokens Saved</div>
+        </div>
+        <div class="tk-stat">
+          <div class="tk-stat-value tk-saved" id="tkSavedPct">—</div>
+          <div class="tk-stat-label">% Reduction</div>
+        </div>
+        <div class="tk-stat">
+          <div class="tk-stat-value tk-saved" id="tkSavedCost">—</div>
+          <div class="tk-stat-label">Cost Saved / Request</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    var compareVisible = false;
+    function toggleCompare() {
+      compareVisible = !compareVisible;
+      var panel = document.getElementById('tkComparePanel');
+      var btn = document.getElementById('tkCompareBtn');
+      var icon = document.getElementById('tkCompareIcon');
+      panel.className = 'tk-compare-panel' + (compareVisible ? ' visible' : '');
+      btn.className = 'tk-compare-toggle' + (compareVisible ? ' active' : '');
+      icon.textContent = compareVisible ? '−' : '+';
+      countTokens();
+    }
+    function countTokens() {
+      var text = document.getElementById('tkInput').value;
+      var enc = GPTTokenizer_cl100k_base;
+      var tokens = text.length ? enc.encode(text).length : 0;
+      document.getElementById('tkCount').textContent = tokens.toLocaleString();
+      document.getElementById('tkChars').textContent = text.length.toLocaleString();
+      document.getElementById('tkCost').textContent = '$' + (tokens * 0.000015).toFixed(4);
+
+      if (compareVisible) {
+        var textAfter = document.getElementById('tkInputAfter').value;
+        var tokensAfter = textAfter.length ? enc.encode(textAfter).length : 0;
+        var saved = tokens - tokensAfter;
+        var pct = tokens > 0 ? Math.round((saved / tokens) * 100) : 0;
+        document.getElementById('tkSaved').textContent = saved > 0 ? '−' + saved.toLocaleString() : saved.toLocaleString();
+        document.getElementById('tkSavedPct').textContent = pct + '%';
+        document.getElementById('tkSavedCost').textContent = '$' + Math.abs(saved * 0.000015).toFixed(4);
+      }
+    }
+    // Init on load for any cached input
+    document.addEventListener('DOMContentLoaded', function() { countTokens(); });
+  </script>
 
   <!-- Why this matters -->
   <section class="section">
